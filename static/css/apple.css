@@ -1,0 +1,177 @@
+/* Apple Design System (apple.com/vn) Styling */
+:root {
+  --apple-bg: #F5F5F7;
+  --apple-card-bg: #FFFFFF;
+  --apple-text-primary: #1D1D1F;
+  --apple-text-secondary: #86868B;
+  --apple-blue: #0071E3;
+  --apple-blue-hover: #0077ED;
+  --apple-border: rgba(0, 0, 0, 0.08);
+  --apple-shadow-card: 0 4px 24px -2px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  --apple-shadow-dock: 0 12px 36px -4px rgba(0, 0, 0, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+  --apple-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  font-family: var(--apple-font);
+  background-color: var(--apple-bg);
+  color: var(--apple-text-primary);
+  letter-spacing: -0.015em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Frosted Glass */
+.glass-nav {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid var(--apple-border);
+}
+
+.glass-dock {
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--apple-shadow-dock);
+  border-radius: 9999px;
+}
+
+/* Apple Cards */
+.apple-card {
+  background: var(--apple-card-bg);
+  border-radius: 20px;
+  border: 1px solid var(--apple-border);
+  box-shadow: var(--apple-shadow-card);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-card:hover {
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.03);
+}
+
+/* Apple Dropzone */
+.apple-dropzone {
+  border: 2px dashed rgba(0, 113, 227, 0.35);
+  background: rgba(0, 113, 227, 0.02);
+  border-radius: 18px;
+  transition: all 0.2s ease;
+}
+
+.apple-dropzone.drag-active {
+  border-color: var(--apple-blue);
+  background: rgba(0, 113, 227, 0.08);
+  transform: scale(1.01);
+}
+
+/* Apple Inputs */
+.apple-input {
+  background: #F5F5F7;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--apple-text-primary);
+  font-size: 14px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.apple-input:focus {
+  outline: none;
+  background: #FFFFFF;
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+}
+
+.apple-input-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--apple-text-secondary);
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Apple Pill Buttons */
+.apple-btn-pill {
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.apple-btn-primary {
+  background: var(--apple-blue);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+}
+
+.apple-btn-primary:hover {
+  background: var(--apple-blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.4);
+}
+
+.apple-btn-secondary {
+  background: #E8E8ED;
+  color: var(--apple-text-primary);
+}
+
+.apple-btn-secondary:hover {
+  background: #DCDCE2;
+  transform: translateY(-1px);
+}
+
+.apple-btn-frosted {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--apple-text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.apple-btn-frosted:hover {
+  background: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Apple Segmented Control */
+.apple-segmented {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  padding: 3px;
+  display: inline-flex;
+  gap: 2px;
+}
+
+.apple-segment-item {
+  border-radius: 9px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--apple-text-secondary);
+  transition: all 0.18s ease;
+}
+
+.apple-segment-item.active {
+  background: #FFFFFF;
+  color: var(--apple-text-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Pulse animation */
+@keyframes applePulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-pulse-apple {
+  animation: applePulse 2s infinite ease-in-out;
+}

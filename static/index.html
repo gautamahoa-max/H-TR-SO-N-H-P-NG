@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Tạo Hợp Đồng Tự Động - Chuẩn Nghị định 30 & Apple Design</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Apple Custom Style -->
+  <link rel="stylesheet" href="/static/css/apple.css">
+</head>
+<body class="min-h-screen pb-32 flex flex-col justify-between">
+
+  <!-- 1. Apple Navigation Bar (Glassmorphism) -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-semibold text-sm">
+          
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="text-base font-semibold text-zinc-900 tracking-tight">Hợp Đồng Văn Phòng</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+            Nghị định 30/2020/NĐ-CP
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button id="btnQuickSample" class="apple-btn-pill apple-btn-frosted text-xs px-3.5 py-1.5 hidden sm:inline-flex">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+          <span>Thử dữ liệu mẫu</span>
+        </button>
+        <button id="btnOpenProfile" class="apple-btn-pill apple-btn-frosted text-xs px-3.5 py-1.5">
+          <i data-lucide="building-2" class="w-3.5 h-3.5 text-zinc-600"></i>
+          <span>Hồ sơ Bên A</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. Hero Header Section -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900 mb-2">
+        Tạo Hợp Đồng Tự Động.
+      </h1>
+      <p class="text-base sm:text-lg text-zinc-500 font-normal">
+        Nạp căn cước công dân hoặc nhập tay trực tiếp. Xuất PDF & Word chuẩn 100% Nghị định 30.
+      </p>
+
+      <!-- Segmented Control Chọn Chế Độ -->
+      <div class="mt-5 inline-flex apple-segmented">
+        <button id="tabB2C" class="apple-segment-item active">
+          🏢 Doanh nghiệp & Khách hàng (B2C)
+        </button>
+        <button id="tabC2C" class="apple-segment-item">
+          👤 Hai cá nhân tự do (C2C)
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Split-Screen Workspace (So sánh & Đối soát) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- CỘT TRÁI: VÙNG NẠP CCCD & XEM ẢNH GỐC (5 Cột) -->
+      <div class="lg:col-span-5 space-y-4">
+        <div class="apple-card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-2">
+              <i data-lucide="scan" class="w-4 h-4 text-blue-600"></i>
+              <span>Thẻ Căn Cước Công Dân</span>
+            </h2>
+            <span id="scanStatusBadge" class="hidden text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+              Đã bóc tách 100%
+            </span>
+          </div>
+
+          <!-- Dropzone Kéo Thả Ảnh / PDF -->
+          <div id="dropzone" class="apple-dropzone p-6 text-center cursor-pointer flex flex-col items-center justify-center min-h-[260px] relative overflow-hidden">
+            <input type="file" id="fileInput" accept="image/*,.pdf,application/pdf" class="hidden">
+            
+            <div id="dropzoneContent" class="space-y-3">
+              <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto transition-transform group-hover:scale-105">
+                <i data-lucide="scan" class="w-7 h-7"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-zinc-800">
+                  Kéo thả ảnh hoặc file PDF CCCD vào đây
+                </p>
+                <p class="text-xs text-zinc-400 mt-1">
+                  Hỗ trợ JPG, PNG, WEBP, PDF (Quét QR trong 0.1s)
+                </p>
+              </div>
+              <div class="pt-2 flex flex-wrap justify-center gap-2">
+                <button type="button" id="btnOpenCamera" class="apple-btn-pill apple-btn-primary text-xs py-1.5 px-3.5 shadow-sm">
+                  <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                  <span>Chụp camera</span>
+                </button>
+                <button type="button" id="btnSelectFile" class="apple-btn-pill apple-btn-frosted text-xs py-1.5 px-3">
+                  <i data-lucide="upload" class="w-3.5 h-3.5 text-zinc-600"></i>
+                  <span>Chọn ảnh / PDF</span>
+                </button>
+                <button type="button" id="btnUseSampleImage" class="apple-btn-pill apple-btn-frosted text-xs py-1.5 px-3 text-blue-600">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  <span>Dùng CCCD mẫu</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Ảnh xem trước khi đã tải lên -->
+            <div id="previewContainer" class="hidden w-full h-full">
+              <img id="previewImage" src="" alt="CCCD Preview" class="w-full h-auto max-h-[280px] object-contain rounded-xl shadow-sm mx-auto">
+              <div class="mt-3 flex items-center justify-center gap-2">
+                <button type="button" id="btnReUpload" class="apple-btn-pill apple-btn-frosted text-xs py-1 px-3">
+                  <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                  <span>Đổi ảnh khác</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading Spinner khi bóc tách -->
+            <div id="scanLoading" class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center space-y-3">
+              <div class="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              <p class="text-xs font-medium text-zinc-700">Đang giải mã mã QR thẻ CCCD...</p>
+            </div>
+          </div>
+
+          <!-- Thông báo hướng dẫn nhập tay -->
+          <div class="mt-4 p-3.5 bg-zinc-50 rounded-xl border border-zinc-200/60 text-xs text-zinc-600 flex items-start gap-2.5">
+            <i data-lucide="info" class="w-4 h-4 text-zinc-400 flex-shrink-0 mt-0.5"></i>
+            <div>
+              <p class="font-medium text-zinc-800">Không có ảnh CCCD sẵn?</p>
+              <p class="text-zinc-500 mt-0.5">Bạn có thể gõ trực tiếp vào các ô thông tin ở form bên phải mà không cần tải ảnh.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Khung tóm tắt Bên A (Khi ở chế độ B2C) -->
+        <div id="cardBenAInfo" class="apple-card p-5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Bên A (Đơn vị cung cấp)</span>
+            <button id="btnEditBenAFast" class="text-xs text-blue-600 font-medium hover:underline">Chỉnh sửa</button>
+          </div>
+          <p id="dispBenATen" class="text-sm font-semibold text-zinc-900 leading-snug">CÔNG TY CỔ PHẦN CÔNG NGHỆ VÀ THƯƠNG MẠI VIỆT NAM</p>
+          <p id="dispBenADaiDien" class="text-xs text-zinc-500 mt-1">Đại diện: VÕ VĂN HÒA - Chức vụ: Tổng Giám đốc</p>
+          <p id="dispBenAChiNhanh" class="text-xs text-zinc-400 mt-0.5">MST: 0109888999 | Hà Nội</p>
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI: FORM ĐỐI SOÁT & NHẬP THÔNG TIN (7 Cột) -->
+      <div class="lg:col-span-7 space-y-4">
+        <div class="apple-card p-6">
+          <div class="flex items-center justify-between mb-5 pb-3 border-b border-zinc-100">
+            <div>
+              <h2 class="text-base font-semibold text-zinc-900">Thông Tin Khách Hàng (Bên B)</h2>
+              <p class="text-xs text-zinc-400">Tự động điền khi quét ảnh hoặc bạn có thể gõ trực tiếp tự do</p>
+            </div>
+            <button type="button" id="btnClearForm" class="apple-btn-pill apple-btn-frosted text-xs py-1 px-3 text-zinc-600">
+              <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+              <span>Xóa trắng Form</span>
+            </button>
+          </div>
+
+          <!-- Form Fields Bên B -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2">
+              <label class="apple-input-label">Họ và tên khách hàng (IN HOA)</label>
+              <input type="text" id="inputHoTen" placeholder="NGUYỄN VĂN AN" class="apple-input font-medium uppercase">
+            </div>
+
+            <div>
+              <label class="apple-input-label">Số CCCD / Mã định danh (12 số)</label>
+              <input type="text" id="inputCCCD" placeholder="001200001234" maxlength="12" class="apple-input tracking-wider font-mono">
+            </div>
+
+            <div>
+              <label class="apple-input-label">Ngày sinh (DD/MM/YYYY)</label>
+              <input type="text" id="inputNgaySinh" placeholder="15/08/1995" class="apple-input">
+            </div>
+
+            <div>
+              <label class="apple-input-label">Giới tính</label>
+              <select id="inputGioiTinh" class="apple-input">
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="apple-input-label">Số điện thoại liên hệ</label>
+              <input type="text" id="inputDienThoai" placeholder="0912.345.678" class="apple-input">
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="apple-input-label">Nơi đăng ký thường trú (theo CCCD)</label>
+              <input type="text" id="inputDiaChi" placeholder="Số 123 Phố Huế, Phường Hàng Bài, Quận Hoàn Kiếm, Hà Nội" class="apple-input">
+            </div>
+
+            <div>
+              <label class="apple-input-label">Ngày cấp CCCD</label>
+              <input type="text" id="inputNgayCap" placeholder="25/04/2021" class="apple-input">
+            </div>
+
+            <div>
+              <label class="apple-input-label">Cơ quan cấp</label>
+              <input type="text" id="inputNoiCap" placeholder="Cục Cảnh sát quản lý hành chính về trật tự xã hội" class="apple-input">
+            </div>
+          </div>
+
+          <!-- Tùy chọn Thêm người đồng ký kết / Vợ chồng -->
+          <div class="mt-5 pt-4 border-t border-zinc-100">
+            <div class="flex items-center justify-between">
+              <label class="flex items-center space-x-2.5 cursor-pointer">
+                <input type="checkbox" id="chkCoSigner" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-zinc-300">
+                <span class="text-xs font-semibold text-zinc-700">Khách hàng có người đồng ký (Vợ/Chồng hoặc Đồng sở hữu)</span>
+              </label>
+            </div>
+
+            <!-- Form mở rộng Người đồng ký -->
+            <div id="secCoSigner" class="hidden mt-3 p-4 bg-zinc-50/80 rounded-2xl border border-zinc-200/60 space-y-3.5">
+              
+              <!-- Nạp CCCD Vợ/Chồng -->
+              <div class="p-3.5 bg-white rounded-xl border border-blue-200/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center space-x-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="scan" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center space-x-2">
+                      <p class="text-xs font-semibold text-zinc-900">Nạp CCCD của Vợ / Chồng</p>
+                      <span id="coScanBadge" class="hidden text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">Đã bóc tách</span>
+                    </div>
+                    <p class="text-[11px] text-zinc-500">Chụp camera hoặc tải ảnh/PDF để tự động điền</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
+                  <button type="button" id="btnOpenCoCamera" class="apple-btn-pill apple-btn-primary text-xs py-1.5 px-3">
+                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                    <span>Chụp thẻ</span>
+                  </button>
+                  <button type="button" id="btnSelectCoFile" class="apple-btn-pill apple-btn-frosted text-xs py-1.5 px-3">
+                    <i data-lucide="upload" class="w-3.5 h-3.5 text-zinc-600"></i>
+                    <span>Chọn file</span>
+                  </button>
+                  <input type="file" id="coFileInput" accept="image/*,.pdf,application/pdf" class="hidden">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="apple-input-label">Họ tên người đồng ký (IN HOA)</label>
+                  <input type="text" id="inputCoTen" placeholder="TRẦN THỊ BÌNH" class="apple-input uppercase text-xs font-medium">
+                </div>
+                <div>
+                  <label class="apple-input-label">Số CCCD / Mã định danh</label>
+                  <input type="text" id="inputCoCCCD" placeholder="001195009999" maxlength="12" class="apple-input text-xs font-mono">
+                </div>
+                <div>
+                  <label class="apple-input-label">Ngày sinh (DD/MM/YYYY)</label>
+                  <input type="text" id="inputCoNgaySinh" placeholder="20/10/1996" class="apple-input text-xs">
+                </div>
+                <div>
+                  <label class="apple-input-label">Mối quan hệ</label>
+                  <select id="inputCoQuanHe" class="apple-input text-xs">
+                    <option value="Vợ/Chồng">Vợ/Chồng</option>
+                    <option value="Chồng">Chồng</option>
+                    <option value="Vợ">Vợ</option>
+                    <option value="Đồng sở hữu">Đồng sở hữu</option>
+                    <option value="Người bảo lãnh">Người bảo lãnh</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chi Tiết Hợp Đồng & Chọn Mẫu Nguồn -->
+          <div class="mt-5 pt-4 border-t border-zinc-100">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-semibold text-zinc-900">Nội Dung & Mẫu Hợp Đồng</h3>
+              <span id="tplCountBadge" class="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                41 Mẫu HĐ Nguồn
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <label class="apple-input-label">Chọn Mẫu Hợp Đồng Nguồn (1.1 Thương Mại & Dịch Vụ)</label>
+                <select id="selectTemplate" class="apple-input font-medium text-sm text-zinc-800">
+                  <option value="">[Mặc định] Hợp đồng Dịch vụ chuẩn Nghị định 30/2020/NĐ-CP</option>
+                  <option value="Mẫu số 01 - Hợp đồng mua bán đèn trang trí (1).docx">Mẫu số 01 - Hợp đồng mua bán đèn trang trí</option>
+                  <option value="Mẫu số 02 - Hợp đồng mua bán cây.docx">Mẫu số 02 - Hợp đồng mua bán cây</option>
+                  <option value="Mẫu số 03 - Hợp đồng dịch vụ in ấn.docx">Mẫu số 03 - Hợp đồng dịch vụ in ấn</option>
+                  <option value="Mẫu số 04 - Hợp đồng dịch vụ sản xuất, in ấn và treo phướn, băng rôn (1).docx">Mẫu số 04 - Hợp đồng dịch vụ sản xuất, in ấn và treo phướn, băng rôn</option>
+                  <option value="Mẫu số 05 - Hợp đồng cung cấp dịch vụ chuyển phát (1).docx">Mẫu số 05 - Hợp đồng cung cấp dịch vụ chuyển phát</option>
+                  <option value="Mẫu số 06 - Hợp đồng thuê ca sỹ biểu diễn.docx">Mẫu số 06 - Hợp đồng thuê ca sỹ biểu diễn</option>
+                  <option value="Mẫu số 07- Hợp đồng nguyên tắc vv cung cấp VPP.docx">Mẫu số 07 - Hợp đồng nguyên tắc vv cung cấp VPP</option>
+                  <option value="Mẫu số 08 - Hợp đồng dịch vụ vv cho thuê thiết bị.docx">Mẫu số 08 - Hợp đồng dịch vụ vv cho thuê thiết bị</option>
+                  <option value="Mẫu số 10 - Hợp đồng thi công, lắp đặt, tháo dỡ.docx">Mẫu số 10 - Hợp đồng thi công, lắp đặt, tháo dỡ</option>
+                  <option value="Mẫu số 11 -(17 trang) - Hợp đồng thi công lắp đặt Pano, backdrop.docx">Mẫu số 11 - Hợp đồng thi công lắp đặt Pano, backdrop</option>
+                  <option value="Mẫu số 12 - Hợp đồng thuê cây cảnh.docx">Mẫu số 12 - Hợp đồng thuê cây cảnh</option>
+                  <option value="Mẫu số 13 - Hợp đồng dịch vụ phát tờ rơi.docx">Mẫu số 13 - Hợp đồng dịch vụ phát tờ rơi</option>
+                  <option value="Mẫu số 14 - SALE & PURCHASE CONTRACT.docx">Mẫu số 14 - SALE & PURCHASE CONTRACT</option>
+                  <option value="Mẫu số 15 - Hợp đồng trông giữ phương tiện.docx">Mẫu số 15 - Hợp đồng trông giữ phương tiện</option>
+                  <option value="Mẫu số 16 -  HDDV gui-giu xe.docx">Mẫu số 16 - Hợp đồng dịch vụ gửi giữ xe</option>
+                  <option value="Mẫu số 17 - Mẫu Hợp đồng mua bán hàng hoá.docx">Mẫu số 17 - Mẫu Hợp đồng mua bán hàng hoá</option>
+                  <option value="Mẫu số 21 - Hợp đồng cung cấp dịch vụ vận chuyển.docx">Mẫu số 21 - Hợp đồng cung cấp dịch vụ vận chuyển</option>
+                  <option value="Mẫu số 22 - Sales & Purchase contract.docx">Mẫu số 22 - Sales & Purchase contract</option>
+                  <option value="Mẫu số 23 - Hợp đồng thue vị trí quảng cáo.docx">Mẫu số 23 - Hợp đồng thuê vị trí quảng cáo</option>
+                  <option value="mẫu số 24 - HDDV phat trien thuong hieu.docx">Mẫu số 24 - Hợp đồng dịch vụ phát triển thương hiệu</option>
+                  <option value="69. HỢP ĐỒNG GỬI GIỮ TÀI SẢN.docx">69. HỢP ĐỒNG GỬI GIỮ TÀI SẢN</option>
+                  <option value="72. HỢP ĐỒNG DỊCH VỤ BẢO VỆ PHÒNG KHÁM.docx">72. HỢP ĐỒNG DỊCH VỤ BẢO VỆ PHÒNG KHÁM</option>
+                  <option value="73. HỢP ĐỒNG DỊCH VỤ ĐỊNH CƯ.docx">73. HỢP ĐỒNG DỊCH VỤ ĐỊNH CƯ</option>
+                  <option value="75. HỢP ĐỒNG ĐẠI LÝ PHÂN PHỐI ĐỘC QUYỀN.docx">75. HỢP ĐỒNG ĐẠI LÝ PHÂN PHỐI ĐỘC QUYỀN</option>
+                  <option value="76. HỢP ĐỒNG GIA CÔNG SẢN XUẤT RƯỢU.docx">76. HỢP ĐỒNG GIA CÔNG SẢN XUẤT RƯỢU</option>
+                  <option value="78. HỢP ĐỒNG DỊCH VỤ QUẢNG CÁO.docx">78. HỢP ĐỒNG DỊCH VỤ QUẢNG CÁO</option>
+                  <option value="79. HỢP ĐỒNG KHUNG CHỈNH SỬA HÌNH ẢNH.docx">79. HỢP ĐỒNG KHUNG CHỈNH SỬA HÌNH ẢNH</option>
+                  <option value="80. HỢP ĐỒNG CUNG CẤP VẬT LIỆU XÂY DỰNG.docx">80. HỢP ĐỒNG CUNG CẤP VẬT LIỆU XÂY DỰNG</option>
+                  <option value="81. HỢP ĐỒNG VAY TIỀN NƯỚC NGOÀI SONG NGỮ.docx">81. HỢP ĐỒNG VAY TIỀN NƯỚC NGOÀI SONG NGỮ</option>
+                  <option value="85. Brokerage agreement.docx">85. Brokerage agreement</option>
+                  <option value="88. HỢP ĐỒNG DỊCH VỤ VẬN CHUYỂN THƯỜNG XUYÊN HÀNG HÓA CỦA SÀN.doc">88. HỢP ĐỒNG DỊCH VỤ VẬN CHUYỂN THƯỜNG XUYÊN HÀNG HÓA CỦA SÀN</option>
+                  <option value="89. HỢP ĐỒNG DỊCH VỤ THUƠNG MẠI ĐIỆN TỬ.docx">89. HỢP ĐỒNG DỊCH VỤ THƯƠNG MẠI ĐIỆN TỬ</option>
+                  <option value="93. HỢP ĐỒNG DỊCH VỤ ĐÁNH GIÁ TÁC ĐỘNG MÔI TRƯỜNG.docx">93. HỢP ĐỒNG DỊCH VỤ ĐÁNH GIÁ TÁC ĐỘNG MÔI TRƯỜNG</option>
+                  <option value="94. HỢP ĐỒNG DỊCH VỤ GIÁM SÁT AN TOÀN LAO DỘNG.docx">94. HỢP ĐỒNG DỊCH VỤ GIÁM SÁT AN TOÀN LAO ĐỘNG</option>
+                  <option value="95. HỢP ĐỒNG MUA BÁN MÁY MÓC THIẾT BỊ_LEGAL FORUM.docx">95. HỢP ĐỒNG MUA BÁN MÁY MÓC THIẾT BỊ</option>
+                  <option value="96. HỢP ĐỒNG DỊCH VỤ MÔI GIỚI.docx">96. HỢP ĐỒNG DỊCH VỤ MÔI GIỚI</option>
+                  <option value="97. HOP DONG MUON TAI SAN.docx">97. HỢP ĐỒNG MƯỢN TÀI SẢN</option>
+                  <option value="114. HỢP ĐỒNG NGUYÊN TẮC MUA BAO BÌ.docx">114. HỢP ĐỒNG NGUYÊN TẮC MUA BAO BÌ</option>
+                  <option value="10. Ý Kiến Pháp Lý.docx">10. Ý Kiến Pháp Lý</option>
+                  <option value="11. Thư tư vấn pháp lý.docx">11. Thư tư vấn pháp lý</option>
+                  <option value="12. Mẫu Thư Tư Vấn Pháp lý.docx">12. Mẫu Thư Tư Vấn Pháp lý</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="apple-input-label">Tên loại hợp đồng</label>
+                <input type="text" id="inputTenHD" value="HỢP ĐỒNG DỊCH VỤ TƯ VẤN VÀ CUNG CẤP GIẢI PHÁP" class="apple-input font-medium">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="apple-input-label">Giá trị hợp đồng (VNĐ)</label>
+                  <input type="text" id="inputGiaTri" placeholder="150.000.000" class="apple-input font-semibold text-blue-600">
+                </div>
+                <div>
+                  <label class="apple-input-label">Thời hạn thực hiện</label>
+                  <input type="text" id="inputThoiHan" value="12 tháng kể từ ngày ký" class="apple-input">
+                </div>
+              </div>
+
+              <!-- Số tiền bằng chữ tự động -->
+              <div>
+                <label class="apple-input-label">Số tiền bằng chữ (Tự động dịch)</label>
+                <input type="text" id="inputGiaTriChu" placeholder="Một trăm năm mươi triệu đồng chẵn" class="apple-input italic bg-blue-50/40 text-zinc-700">
+              </div>
+
+              <div>
+                <label class="apple-input-label">Nội dung công việc tóm tắt</label>
+                <textarea id="inputNoiDung" rows="2" class="apple-input text-xs">Cung cấp giải pháp phần mềm, chuyển giao công nghệ và hỗ trợ kỹ thuật vận hành theo yêu cầu của Bên B.</textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 4. Apple Floating Action Dock (3 NÚT BẤM TINH GỌN) -->
+  <div class="fixed bottom-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <div class="glass-dock p-2 sm:p-2.5 flex items-center space-x-2 sm:space-x-3 pointer-events-auto">
+      
+      <!-- Nút 1: Xem trước -->
+      <button id="btnPreview" class="apple-btn-pill apple-btn-frosted text-xs sm:text-sm font-medium py-2.5 px-4 sm:px-5">
+        <i data-lucide="eye" class="w-4 h-4 text-zinc-600"></i>
+        <span>Xem trước</span>
+      </button>
+
+      <!-- Nút 2: Xuất PDF (Hero CTA) -->
+      <button id="btnExportPDF" class="apple-btn-pill apple-btn-primary text-xs sm:text-sm font-semibold py-2.5 px-5 sm:px-7">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>Xuất PDF</span>
+      </button>
+
+      <!-- Nút 3: Xuất docx -->
+      <button id="btnExportDocx" class="apple-btn-pill apple-btn-secondary text-xs sm:text-sm font-medium py-2.5 px-4 sm:px-5">
+        <i data-lucide="file-edit" class="w-4 h-4 text-zinc-700"></i>
+        <span>Xuất docx</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- 5. Modal Xem Trước PDF Toàn Màn Hình (Apple Style) -->
+  <div id="modalPreview" class="hidden fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+    <div class="bg-white rounded-3xl w-full max-w-5xl h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/80">
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-3 rounded-full bg-red-400"></div>
+          <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+          <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+          <span class="ml-2 text-xs font-semibold text-zinc-700">Bản xem trước Hợp đồng (Chuẩn Nghị định 30/2020/NĐ-CP)</span>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <button id="modalBtnDownloadPDF" class="apple-btn-pill apple-btn-primary text-xs py-1.5 px-4">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Tải PDF</span>
+          </button>
+          <button id="modalBtnClose" class="w-8 h-8 rounded-full bg-zinc-200/70 hover:bg-zinc-300/80 text-zinc-600 flex items-center justify-center transition-colors">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (PDF Viewer) -->
+      <div class="flex-1 bg-zinc-100 relative">
+        <iframe id="pdfFrame" class="w-full h-full border-none" src="about:blank"></iframe>
+        <div id="pdfLoading" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-3">
+          <div class="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <p class="text-xs font-medium text-zinc-600">Đang khởi tạo bản in chuẩn Nghị định 30...</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. Modal Hồ Sơ Bên A (Công Ty) -->
+  <div id="modalProfile" class="hidden fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-zinc-100">
+        <h3 class="text-base font-semibold text-zinc-900">Hồ Sơ Đơn Vị (Bên A)</h3>
+        <button id="modalProfileClose" class="text-zinc-400 hover:text-zinc-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 max-h-[65vh] overflow-y-auto pr-1 text-xs">
+        <div>
+          <label class="apple-input-label">Tên doanh nghiệp / Đơn vị</label>
+          <input type="text" id="profTen" class="apple-input">
+        </div>
+        <div>
+          <label class="apple-input-label">Mã số thuế</label>
+          <input type="text" id="profMST" class="apple-input">
+        </div>
+        <div>
+          <label class="apple-input-label">Địa chỉ trụ sở</label>
+          <input type="text" id="profDiaChi" class="apple-input">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="apple-input-label">Người đại diện</label>
+            <input type="text" id="profDaiDien" class="apple-input uppercase">
+          </div>
+          <div>
+            <label class="apple-input-label">Chức vụ</label>
+            <input type="text" id="profChucVu" class="apple-input">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="apple-input-label">Số CCCD đại diện</label>
+            <input type="text" id="profCCCD" class="apple-input font-mono">
+          </div>
+          <div>
+            <label class="apple-input-label">Ngày cấp</label>
+            <input type="text" id="profNgayCap" class="apple-input">
+          </div>
+        </div>
+        <div>
+          <label class="apple-input-label">Tài khoản ngân hàng</label>
+          <input type="text" id="profSTK" class="apple-input">
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-zinc-100 flex justify-end space-x-2">
+        <button id="btnSaveProfile" class="apple-btn-pill apple-btn-primary text-xs py-2 px-5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>Lưu thông tin</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Modal Chụp Camera Trực Tiếp (Apple Camera UI) -->
+  <div id="modalCamera" class="hidden fixed inset-0 z-50 overflow-hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+    <div class="bg-zinc-900 text-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col relative animate-in fade-in zoom-in duration-200 border border-zinc-800">
+      
+      <!-- Header -->
+      <div class="px-5 py-3.5 flex items-center justify-between border-b border-zinc-800 bg-zinc-950/50">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="camera" class="w-4 h-4 text-blue-400"></i>
+          <span class="text-sm font-semibold tracking-tight text-zinc-200">Chụp Căn Cước Công Dân</span>
+        </div>
+        <button id="btnCameraClose" class="w-8 h-8 rounded-full bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Video Feed với Khung Căn Chỉnh CCCD -->
+      <div class="relative bg-black aspect-[4/3] flex items-center justify-center overflow-hidden">
+        <video id="cameraVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+        <canvas id="cameraCanvas" class="hidden"></canvas>
+
+        <!-- Khung viền căn chỉnh CCCD (Apple Card Guide) -->
+        <div class="absolute inset-x-8 inset-y-8 sm:inset-x-12 sm:inset-y-10 border-2 border-white/60 rounded-2xl pointer-events-none shadow-[0_0_0_9999px_rgba(0,0,0,0.45)] flex flex-col justify-between p-3">
+          <div class="self-start text-[11px] font-medium text-white/90 bg-black/60 px-2.5 py-1 rounded-md backdrop-blur-sm">
+            Đặt mặt trước thẻ CCCD vào trong khung này
+          </div>
+          <!-- 4 Góc viền xanh định vị -->
+          <div class="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-blue-400 rounded-tl-lg"></div>
+          <div class="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-blue-400 rounded-tr-lg"></div>
+          <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-blue-400 rounded-bl-lg"></div>
+          <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-blue-400 rounded-br-lg"></div>
+        </div>
+
+        <!-- Trạng thái kết nối camera -->
+        <div id="cameraLoading" class="absolute inset-0 bg-black/90 flex flex-col items-center justify-center space-y-3">
+          <div class="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p class="text-xs text-zinc-300">Đang bật camera máy tính...</p>
+        </div>
+      </div>
+
+      <!-- Footer với Nút Chụp Hình iPhone/Apple -->
+      <div class="p-5 bg-zinc-950 flex items-center justify-center relative">
+        <button id="btnCameraSnap" class="w-16 h-16 rounded-full border-4 border-white/40 p-1 flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg" title="Nhấn để chụp ảnh">
+          <div class="w-full h-full bg-white rounded-full hover:bg-zinc-100 shadow-md"></div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="/static/js/app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
