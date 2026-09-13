@@ -29,8 +29,13 @@ from docx.enum.table import WD_TABLE_ALIGNMENT
 
 from app.vn_num2words import doc_so_thanh_chu
 
-# Đăng ký phông chữ Times New Roman có sẵn trên macOS
-FONT_DIR = "/System/Library/Fonts/Supplemental"
+# Đăng ký phông chữ Times New Roman (hỗ trợ macOS, Linux, Docker, GitHub Codespaces)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_FONTS_DIR = os.path.join(BASE_DIR, "app", "fonts")
+MACOS_FONT_DIR = "/System/Library/Fonts/Supplemental"
+
+FONT_DIR = PROJECT_FONTS_DIR if os.path.exists(os.path.join(PROJECT_FONTS_DIR, "Times New Roman.ttf")) else MACOS_FONT_DIR
+
 TIMES_REGULAR = os.path.join(FONT_DIR, "Times New Roman.ttf")
 TIMES_BOLD = os.path.join(FONT_DIR, "Times New Roman Bold.ttf")
 TIMES_ITALIC = os.path.join(FONT_DIR, "Times New Roman Italic.ttf")

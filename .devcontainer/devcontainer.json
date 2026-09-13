@@ -1,0 +1,23 @@
+{
+  "name": "He Thong Ho Tro Soan Hop Dong",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "Giao Dien Soan Hop Dong",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt",
+  "postStartCommand": "nohup python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 > /tmp/app.log 2>&1 &",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      },
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
+}

@@ -20,7 +20,11 @@ echo "Ứng dụng sẽ tự động mở tại: http://localhost:8000"
 echo "Nhấn Ctrl+C để dừng."
 
 # Mở trình duyệt sau 1.5 giây
-(sleep 1.5 && open "http://localhost:8000") &
+if command -v open >/dev/null 2>&1; then
+    (sleep 1.5 && open "http://localhost:8000") &
+elif command -v xdg-open >/dev/null 2>&1; then
+    (sleep 1.5 && xdg-open "http://localhost:8000") &
+fi
 
 # Chạy server FastAPI uvicorn
-.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

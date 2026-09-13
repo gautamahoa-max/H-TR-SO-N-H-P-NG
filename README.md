@@ -1,6 +1,8 @@
 # HỆ THỐNG HỖ TRỢ SOẠN THẢO HỢP ĐỒNG TỰ ĐỘNG
 ### Chuẩn Nghị định 30/2020/NĐ-CP & Giao diện Apple Design System
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/gautamahoa-max/H-TR-SO-N-H-P-NG)
+
 Hệ thống tự động hóa trích xuất thông tin Căn cước công dân (CCCD) gắn chip và xuất hợp đồng pháp lý chuẩn xác, phục vụ chuyên nghiệp cho các doanh nghiệp, luật sư, chuyên viên pháp lý và kinh doanh.
 
 ---
@@ -68,15 +70,16 @@ Hệ thống tự động hóa trích xuất thông tin Căn cước công dân 
 
 ## 🚀 HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG
 
-### 1. Yêu cầu hệ thống
-- Python 3.10 trở lên.
-- Hệ điều hành: macOS, Linux, Windows.
+### 1. Mở trực tiếp trên Web bằng GitHub Codespaces (1-Click Online)
+- Nhấn vào nút xanh **[Open in GitHub Codespaces](https://codespaces.new/gautamahoa-max/H-TR-SO-N-H-P-NG)** ở đầu trang (hoặc bấm nút `Code` -> tab `Codespaces` -> `Create codespace on main`).
+- GitHub sẽ tự động tạo môi trường đám mây và tự khởi chạy ứng dụng.
+- Cửa sổ trang web sẽ tự động bật lên trong trình duyệt để bạn sử dụng ngay lập tức mà không cần cài đặt gì trên máy tính!
 
-### 2. Khởi chạy nhanh trên macOS
+### 2. Khởi chạy trên máy macOS cục bộ (Offline & Bảo mật)
 - Nhấp đúp chuột vào file **`Chay_Ung_Dung.command`**.
 - Trình duyệt sẽ tự động mở tại địa chỉ: `http://localhost:8000`.
 
-### 3. Khởi chạy bằng dòng lệnh
+### 3. Khởi chạy bằng dòng lệnh Terminal
 ```bash
 # Cài đặt môi trường ảo và dependencies (nếu chạy lần đầu)
 python3 -m venv .venv
